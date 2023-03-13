@@ -6,19 +6,20 @@ int main(int argc, char** argv) {
   }
   FILE *in = fopen(argv[1], "r");
   int znaki[255]={0};
+  double prawdopodobienstwo[255]={0};
+  int suma=0;
   if (in!=NULL){
     char znak;
     while((znak=fgetc(in))!=EOF){
       znaki[znak]++;
+      suma++;
       } 
   }
   fclose(in);
-//Sprawdzanie poprawnosci dzialania kodu
-/*
   for(int i=0; i<255; i++){
     if(znaki[i]!=0){
-      printf("%c %d\n", i, znaki[i]);
+      prawdopodobienstwo[i]=((double)znaki[i]/(double)suma);
       }
   }
-*/
+
 }
