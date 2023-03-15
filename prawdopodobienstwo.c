@@ -1,3 +1,4 @@
+#include "prawdopodobienstwo.h"
 void wystapienia(FILE *in){
   int znaki[255]={0};
   double prawdopodobienstwo[255]={0};
