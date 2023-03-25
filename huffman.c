@@ -93,15 +93,22 @@ void buildHeap(line_t *minHeap) {
         fixHeap(minHeap, i);
 }
 //Funkcja do zamiany, zeby dawac wynik do pliku a nie na ekran
-void printArr(int arr[], int n) {
-    int i;
-    for (i = 0; i < n; ++i)
-        printf("%d", arr[i]);
-    printf("\n");
-}
 
-int Leaf(node_t *root) {
-	return !(root->left) && !(root->right);
+void printArr(int arr[], int n) {
+    FILE *fptr;
+
+    if ((fptr = fopen("wynik.txt", "w")) == NULL) {
+        printf("Nie można otworzyć pliku wynik.txt\n");
+        return;
+    }
+
+    int i;
+    for (i = 0; i < n; ++i) {
+        fprintf(fptr, "%d", arr[i]);
+    }
+    fprintf(fptr, "\n");
+
+    fclose(fptr);
 }
 
 line_t *build(char data[], int frequency[], int size) {
@@ -136,11 +143,15 @@ void printCodes(node_t *root, int arr[], int top) {
 		arr[top] = 1;
 		printCodes(root->right, arr, top + 1);
 	}
-	if (Leaf(root)) {
-		printf("%c: ", root->data); //trzeba to zamienic na dodawanie do pliku a nie na ekran
-		printArr(arr, top);
+	if (isLeaf(root)) {
+ 	  	 FILE *fp;
+    		fp = fopen("output.txt", "a");
+    		fprintf(fp, "%c: ", root->data);
+    		printArrToFile(arr, top, fp);
+    		fclose(fp);
 	}
 }
+
 void HuffmanCodes(char data[], int frequency[], int size) {
 	node_t *root = tree(data, frequency, size);
 	int arr[MAX_TREE_HT], top = 0;
