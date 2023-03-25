@@ -3,6 +3,8 @@
 
 #include "huffman.c"
 
+#define MAX_TREE_HT 100
+
 typedef struct node {
 	char value;
 	int frequency;
@@ -12,66 +14,136 @@ typedef struct node {
 
 //stworzenie wezla drzewa
 
-node_t createNode (char value, int frequency) {
-	node_t * node = (node_t *) malloc (sizeof(node_t));
+//funkcja do przechowywania wezlow w kolejce priorytetowej
 
-	node->left = NULL;
-	node->right = NULL;
-	node->parent = NULL;
-	node->value = value;
-	node->frequency = frequency;
+typedef struct line{
+	int size;
+	int capacity;
+	node **array;
+}line_t;
 
-	return node;
+//Funkcja tworzaca nowy węzeł drzewa z danymi i częstością wystąpienia
+
+node_t * newNode(char value, int frequency) {
+    node_t *temp = (node_t *)malloc(sizeof(node_t));
+    temp->left = temp->right = NULL;
+    temp->value = value;
+    temp->freqency = frequency;
+    return temp;
 }
 
-//funkcja porownujaca dla qsorta - do usuniecia
-
-int compare (const void *a, const void *b) {
-	int x = ((node_t*)a)->frequency;
-	int y = ((node_t*)b)->frequency;
-	return (x-y);
+line_t *createline(int capacity) {
+    struct MinHeap *minHeap = (struct MinHeap *)malloc(sizeof(struct MinHeap));
+    minHeap->size = 0;
+    minHeap->capacity = capacity;
+    minHeap->array = (struct MinHeapNode **)malloc(minHeap->capacity * sizeof(struct MinHeapNode *));
+    return minHeap;
 }
 
-//tworzymy drzewo - do zmiany
+void swapNode(node_t **a, node_t **b) {
+    node_t*t = *a;
+    *a = *b;
+    *b = t;
+}
 
-node_t * createTree (node_t * leafs) {
-	
-	int i;
-	int size = sizeof(leafs) / sizeof(leafs*);
-	
-	node_t ** tree = (node_t**) malloc (size * sizeof(node_t *));
+void fixHeap(line_t *minHeap, int i) {
+    int smallest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+    if (left < minHeap->size && minHeap->array[left]->frequency < minHeap->array[smallest]->frequency)
+        smallest = left;
+    if (right < minHeap->size && minHeap->array[right]->frequency < minHeap->array[smallest]->frequency)
+        smallest = right;
+    if (smallest != i) {
+        swapNode(&minHeap->array[smallest], &minHeap->array[i]);
+        fixHeap(minHeap, smallest);
+    }
+}
 
-	//brzydkie ale zawsze cos... najlepiej zamienic to na heap (kopiec?), tablica jest slaba
+//Usuwanie wezlow kolejki priorytetowej
 
-	while (size > 1) {
-		qsort (tree, size, sizeof(node_t*), compare);
+int isOne(line_t *minHeap) {
+    return (minHeap->size == 1);
+}
 
-		node_t* left = tree[0];
-		node_t* right = tree[1];
-		node_t* parent = createNode ('\0', left->frequency, right->frequency);
-		parent->left = left;
-		parent->right = right;
-		
-		tree[0] = parent;
+node_t *extractMin(line_t *minHeap) {
+    node_t *temp = minHeap->array[0];
+    minHeap->array[0] = minHeap->array[minHeap->size - 1];
+    --minHeap->size;
+    fixHeap(minHeap, 0);
+    return temp;
+}
 
-		for (i = 2; i < size; i++)
-			tree[i-1] = tree[i];
-		
-		size--;
+//Dodanie nowego wezla do kolejki
+
+void insertHeap(line_t *minHeap,node_t *minHeapNode) {
+    ++minHeap->size;
+    int i = minHeap->size - 1;
+    while (i && minHeapNode->frequency < minHeap->array[(i - 1) / 2]->frequency) {
+        minHeap->array[i] = minHeap->array[(i - 1) / 2];
+        i = (i - 1) / 2;
+    }
+    minHeap->array[i] = minHeapNode;
+}
+
+void buildHeap(line_t *minHeap) {
+    int n = minHeap->size - 1;
+    int i;
+    for (i = (n - 1) / 2; i >= 0; --i)
+        fixHeap(minHeap, i);
+}
+//Funkcja do zamiany, zeby dawac wynik do pliku a nie na ekran
+void printArr(int arr[], int n) {
+    int i;
+    for (i = 0; i < n; ++i)
+        printf("%d", arr[i]);
+    printf("\n");
+}
+
+int Leaf(node_t *root) {
+	return !(root->left) && !(root->right);
+}
+
+line_t *build(char data[], int frequency[], int size) {
+	line_t *minHeap = createline(size);
+	for (int i = 0; i < size; ++i)
+		minHeap->array[i] = newNode(data[i], frequency[i]);
+	minHeap->size = size;
+	buildHeap(minHeap);
+	return minHeap;
+}
+
+node_t *tree(char data[], int frequency[], int size) {
+	node_t *left, *right, *top;
+	line_t *minHeap = build(data, frequency, size);
+	while (!isOne(minHeap)) {
+		left = extractMin(minHeap);
+		right = extractMin(minHeap);
+		top = newNode('$', left->frequency + right->frequency);
+		top->left = left;
+		top->right = right;
+		insertMinHeap(minHeap, top);
 	}
-
-	return * tree;
+	return extractMin(minHeap);
 }
 
-//zakodowac szyfrowanie pojedynczego znaku
-void code_char (node_t root){}
-
-//zakodowac calosc
-void code_text (node_t * root){}
-
-//ustawienie - kodowanie
-void encode(FILE *in, FILE *out){
+void printCodes(node_t *root, int arr[], int top) {
+	if (root->left) {
+		arr[top] = 0;
+		printCodes(root->left, arr, top + 1);
+	}
+	if (root->right) {
+		arr[top] = 1;
+		printCodes(root->right, arr, top + 1);
+	}
+	if (Leaf(root)) {
+		printf("%c: ", root->data); //trzeba to zamienic na dodawanie do pliku a nie na ekran
+		printArr(arr, top);
+	}
 }
-//ustawienie - odkodowanie
-void decode(FILE *in, FILE *out){
+void HuffmanCodes(char data[], int frequency[], int size) {
+	node_t *root = tree(data, frequency, size);
+	int arr[MAX_TREE_HT], top = 0;
+	printCodes(root, arr, top);
 }
+
