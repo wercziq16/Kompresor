@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-//#include "huffman.c"
-
 #define MAX_TREE_HT 100
 
 //struktura wezla drzewa
