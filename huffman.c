@@ -1,52 +1,53 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "huffman.c"
+//#include "huffman.c"
 
 #define MAX_TREE_HT 100
 
-typedef struct node {
+//struktura wezla drzewa
+
+struct node {
 	char value;
 	int frequency;
 	struct node *left;
 	struct node *right;
-} node_t;
+};
 
-//stworzenie wezla drzewa
 
-//funkcja do przechowywania wezlow w kolejce priorytetowej
+//struktura do przechowywania wezlow w kolejce priorytetowej
 
-typedef struct line{
+struct line{
 	int size;
 	int capacity;
-	node **array;
-}line_t;
+	struct node **array;
+};
 
 //Funkcja tworzaca nowy węzeł drzewa z danymi i częstością wystąpienia
 
-node_t * newNode(char value, int frequency) {
-    node_t *temp = (node_t *)malloc(sizeof(node_t));
+struct node * newNode(char value, int frequency) {
+    struct node *temp = (struct node *)malloc(sizeof(struct node));
     temp->left = temp->right = NULL;
     temp->value = value;
-    temp->freqency = frequency;
+    temp->frequency = frequency;
     return temp;
 }
 
-line_t *createline(int capacity) {
-    struct MinHeap *minHeap = (struct MinHeap *)malloc(sizeof(struct MinHeap));
+struct line *createline(int capacity) {
+struct line *minHeap = (struct line *)malloc(sizeof(struct line));
     minHeap->size = 0;
     minHeap->capacity = capacity;
-    minHeap->array = (struct MinHeapNode **)malloc(minHeap->capacity * sizeof(struct MinHeapNode *));
+    minHeap->array = (struct node **)malloc(minHeap->capacity * sizeof(struct node *));
     return minHeap;
 }
 
-void swapNode(node_t **a, node_t **b) {
-    node_t*t = *a;
+void swapNode(struct node **a, struct node **b) {
+    struct node*t = *a;
     *a = *b;
     *b = t;
 }
 
-void fixHeap(line_t *minHeap, int i) {
+void fixHeap(struct line *minHeap, int i) {
     int smallest = i;
     int left = 2 * i + 1;
     int right = 2 * i + 2;
@@ -62,12 +63,13 @@ void fixHeap(line_t *minHeap, int i) {
 
 //Usuwanie wezlow kolejki priorytetowej
 
-int isOne(line_t *minHeap) {
+int isOne(struct line *minHeap) {
     return (minHeap->size == 1);
 }
 
-node_t *extractMin(line_t *minHeap) {
-    node_t *temp = minHeap->array[0];
+
+struct node *extractMin(struct line *minHeap) {
+    struct node *temp = minHeap->array[0];
     minHeap->array[0] = minHeap->array[minHeap->size - 1];
     --minHeap->size;
     fixHeap(minHeap, 0);
@@ -76,7 +78,7 @@ node_t *extractMin(line_t *minHeap) {
 
 //Dodanie nowego wezla do kolejki
 
-void insertHeap(line_t *minHeap,node_t *minHeapNode) {
+void insertHeap(struct line *minHeap,struct node *minHeapNode) {
     ++minHeap->size;
     int i = minHeap->size - 1;
     while (i && minHeapNode->frequency < minHeap->array[(i - 1) / 2]->frequency) {
@@ -86,16 +88,15 @@ void insertHeap(line_t *minHeap,node_t *minHeapNode) {
     minHeap->array[i] = minHeapNode;
 }
 
-void buildHeap(line_t *minHeap) {
+void buildHeap(struct line *minHeap) {
     int n = minHeap->size - 1;
     int i;
     for (i = (n - 1) / 2; i >= 0; --i)
-        fixHeap(minHeap, i);
+    fixHeap(minHeap, i);
 }
-//Funkcja do zamiany, zeby dawac wynik do pliku a nie na ekran
 
-void printArr(int arr[], int n) {
-    FILE *fptr;
+void printArr(int arr[], int n, FILE *fptr) {
+    
 
     if ((fptr = fopen("wynik.txt", "w")) == NULL) {
         printf("Nie można otworzyć pliku wynik.txt\n");
@@ -111,8 +112,12 @@ void printArr(int arr[], int n) {
     fclose(fptr);
 }
 
-line_t *build(char data[], int frequency[], int size) {
-	line_t *minHeap = createline(size);
+int leaf(struct node *root){
+	return!(root->left) && !(root->right);
+}
+
+struct line *build(char data[], int frequency[], int size) {
+	struct line *minHeap = createline(size);
 	for (int i = 0; i < size; ++i)
 		minHeap->array[i] = newNode(data[i], frequency[i]);
 	minHeap->size = size;
@@ -120,21 +125,21 @@ line_t *build(char data[], int frequency[], int size) {
 	return minHeap;
 }
 
-node_t *tree(char data[], int frequency[], int size) {
-	node_t *left, *right, *top;
-	line_t *minHeap = build(data, frequency, size);
+struct node *tree(char data[], int frequency[], int size) {
+	struct node *left, *right, *top;
+	struct line *minHeap = build(data, frequency, size);
 	while (!isOne(minHeap)) {
 		left = extractMin(minHeap);
 		right = extractMin(minHeap);
 		top = newNode('$', left->frequency + right->frequency);
 		top->left = left;
 		top->right = right;
-		insertMinHeap(minHeap, top);
+		insertHeap(minHeap, top);
 	}
 	return extractMin(minHeap);
 }
 
-void printCodes(node_t *root, int arr[], int top) {
+void printCodes(struct node *root, int arr[], int top) {
 	if (root->left) {
 		arr[top] = 0;
 		printCodes(root->left, arr, top + 1);
@@ -143,17 +148,17 @@ void printCodes(node_t *root, int arr[], int top) {
 		arr[top] = 1;
 		printCodes(root->right, arr, top + 1);
 	}
-	if (isLeaf(root)) {
- 	  	 FILE *fp;
+	if (leaf(root)) {
+ 	  	FILE *fp;
     		fp = fopen("output.txt", "a");
-    		fprintf(fp, "%c: ", root->data);
-    		printArrToFile(arr, top, fp);
+    		fprintf(fp, "%c: ", root->value);
+    		printArr(arr, top, fp);
     		fclose(fp);
 	}
 }
 
 void HuffmanCodes(char data[], int frequency[], int size) {
-	node_t *root = tree(data, frequency, size);
+	struct node *root = tree(data, frequency, size);
 	int arr[MAX_TREE_HT], top = 0;
 	printCodes(root, arr, top);
 }
