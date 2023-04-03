@@ -5,47 +5,47 @@
 
 //struktura wezla drzewa
 
-struct node {
+typedef struct node {
 	char value;
 	int frequency;
 	struct node *left;
 	struct node *right;
-};
+} node_t;
 
 
 //struktura do przechowywania wezlow w kolejce priorytetowej
 
-struct line{
+typedef struct line {
 	int size;
 	int capacity;
-	struct node **array;
-};
+	node_t **array;
+} line_t;
 
 //Funkcja tworzaca nowy węzeł drzewa z danymi i częstością wystąpienia
 
-struct node * newNode(char value, int frequency) {
-    struct node *temp = (struct node *)malloc(sizeof(struct node));
+node_t * newNode(char value, int frequency) {
+    node_t *temp = (node_t *)malloc(sizeof(node_t));
     temp->left = temp->right = NULL;
     temp->value = value;
     temp->frequency = frequency;
     return temp;
 }
 
-struct line *createline(int capacity) {
-struct line *minHeap = (struct line *)malloc(sizeof(struct line));
+line_t *createline(int capacity) {
+line_t *minHeap = (line_t *)malloc(sizeof(line_t));
     minHeap->size = 0;
     minHeap->capacity = capacity;
-    minHeap->array = (struct node **)malloc(minHeap->capacity * sizeof(struct node *));
+    minHeap->array = (node_t **)malloc(minHeap->capacity * sizeof(node_t *));
     return minHeap;
 }
 
-void swapNode(struct node **a, struct node **b) {
-    struct node*t = *a;
+void swapNode(node_t **a, node_t **b) {
+    node_t*t = *a;
     *a = *b;
     *b = t;
 }
 
-void fixHeap(struct line *minHeap, int i) {
+void fixHeap(line_t *minHeap, int i) {
     int smallest = i;
     int left = 2 * i + 1;
     int right = 2 * i + 2;
@@ -61,13 +61,13 @@ void fixHeap(struct line *minHeap, int i) {
 
 //Usuwanie wezlow kolejki priorytetowej
 
-int isOne(struct line *minHeap) {
+int isOne(line_t *minHeap) {
     return (minHeap->size == 1);
 }
 
 
-struct node *extractMin(struct line *minHeap) {
-    struct node *temp = minHeap->array[0];
+node_t *extractMin(line_t *minHeap) {
+    node_t *temp = minHeap->array[0];
     minHeap->array[0] = minHeap->array[minHeap->size - 1];
     --minHeap->size;
     fixHeap(minHeap, 0);
@@ -76,7 +76,7 @@ struct node *extractMin(struct line *minHeap) {
 
 //Dodanie nowego wezla do kolejki
 
-void insertHeap(struct line *minHeap,struct node *minHeapNode) {
+void insertHeap(line_t *minHeap,node_t *minHeapNode) {
     ++minHeap->size;
     int i = minHeap->size - 1;
     while (i && minHeapNode->frequency < minHeap->array[(i - 1) / 2]->frequency) {
@@ -86,7 +86,7 @@ void insertHeap(struct line *minHeap,struct node *minHeapNode) {
     minHeap->array[i] = minHeapNode;
 }
 
-void buildHeap(struct line *minHeap) {
+void buildHeap(line_t *minHeap) {
     int n = minHeap->size - 1;
     int i;
     for (i = (n - 1) / 2; i >= 0; --i)
@@ -110,12 +110,12 @@ void printArr(int arr[], int n, FILE *fptr) {
     fclose(fptr);
 }
 
-int leaf(struct node *root){
+int leaf(node_t *root){
 	return!(root->left) && !(root->right);
 }
 
-struct line *build(char data[], int frequency[], int size) {
-	struct line *minHeap = createline(size);
+line_t *build(char data[], int frequency[], int size) {
+	line_t *minHeap = createline(size);
 	for (int i = 0; i < size; ++i)
 		minHeap->array[i] = newNode(data[i], frequency[i]);
 	minHeap->size = size;
@@ -123,9 +123,9 @@ struct line *build(char data[], int frequency[], int size) {
 	return minHeap;
 }
 
-struct node *tree(char data[], int frequency[], int size) {
-	struct node *left, *right, *top;
-	struct line *minHeap = build(data, frequency, size);
+node_t *tree(char data[], int frequency[], int size) {
+	node_t *left, *right, *top;
+	line_t *minHeap = build(data, frequency, size);
 	while (!isOne(minHeap)) {
 		left = extractMin(minHeap);
 		right = extractMin(minHeap);
@@ -137,7 +137,7 @@ struct node *tree(char data[], int frequency[], int size) {
 	return extractMin(minHeap);
 }
 
-void printCodes(struct node *root, int arr[], int top) {
+void printCodes(node_t *root, int arr[], int top) {
 	if (root->left) {
 		arr[top] = 0;
 		printCodes(root->left, arr, top + 1);
@@ -156,7 +156,7 @@ void printCodes(struct node *root, int arr[], int top) {
 }
 
 void HuffmanCodes(char data[], int frequency[], int size) {
-	struct node *root = tree(data, frequency, size);
+	node_t *root = tree(data, frequency, size);
 	int arr[MAX_TREE_HT], top = 0;
 	printCodes(root, arr, top);
 }
