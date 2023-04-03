@@ -1,12 +1,56 @@
 #include <stdio.h>
 #include <stdlib.h>
-// #include "prawdopodobienstwo.h"
 
-int main(int argc, char** argv) {
-  if (argc<2) {
-    printf("Nie podano pliku wejsciowego. Podaj plik w formacie txt.");
-  }
-  FILE *in = fopen(argv[1], "r");
-  wystapienia(in);
+#include "help.h"
+#include "input.h"
+#include "huffman.h"
 
+#define MAX_CHARS 256
+
+int main (int argc, char **argv)
+{
+	char * data = calloc(MAX_CHARS, sizeof(char));
+	unsigned int * frequency = calloc(MAX_CHARS, sizeof(int));
+
+	if (argc < 3) {
+		print_help();
+		return EXIT_FAILURE;
+	}
+		
+	FILE * in = fopen(argv[2], "r");
+	FILE * out = fopen(argv[3], "w");
+
+	if (in == NULL) {
+		print_open();
+		print_help();
+		return EXIT_FAILURE;
+	}
+
+	if (out == NULL) {
+		print_open();
+		print_help();
+		return EXIT_FAILURE;
+	}
+
+	frequency = getFrequency(in);
+
+	
 }
+
+	/*
+
+	if ( atoi(argv[4][1] == 0) ) {
+		if ( atoi(argv[4][2]) == 0 )
+			compression_type = 8_bit;	
+		else if ( atoi(argv[4][2] == 1) )
+			compression_type = 12_bit;
+		else if ( atoi(argv[4][2] == 2) )
+			compression_type = 16_bit;
+	} else compression_type = 8_bit;
+
+	int compression_type = (atoi(argv[4][1]) == 0 && atoi(argv[4][2]) < 3) ? (atoi(argv[4][2])) : 0;
+
+	*/
+
+
+
