@@ -8,16 +8,95 @@
 
 #define MAX_CHARS 256
 #define length(x) ((int)log10(x)+1)
-
+/*
 unsigned int * getFrequency (FILE * in) {
 	char c;
 	unsigned int * frequency = calloc(MAX_CHARS, sizeof(int));
 	while ( (c=fgetc(in)) != EOF ) frequency[c]++;
 	return * frequency;
 }
+*/
+unsigned int * getFrequency(FILE *in) {
+    if (in == NULL) {
+        fprintf(stderr, "Nie można odczytać pliku.\n");
+        return NULL;
+    }
+    char c;
+    unsigned int *frequency = NULL;
+    do {
+        frequency = calloc(MAX_CHARS, sizeof(unsigned int));
+        if (frequency == NULL) {
+            fprintf(stderr, "Nie można zaalokować pamięci.\n");
+            break;
+        }
+        while ((c = fgetc(in)) != EOF) {
+            frequency[(unsigned char) c]++;
+        }
+        break;
+    } while (1);
+    return frequency;
+}
 
 //dopisac verbose
+verbose_t *compress(FILE *in, FILE *out, int *codes) {
+    char c;
+    char bit;
+    char x = 0;
+    int leftToByte = 8;
+    int code = 0;
+    int length = 0;
+    int in_stats = 0;
+    int out_stats = 0;
 
+    verbose_t *verbose = malloc(sizeof(verbose_t));
+    if (verbose == NULL) {
+        fprintf(stderr, "Nie można zaalokować pamięci dla zmiennej verbose.\n");
+        return NULL;
+    }
+    verbose->in_stats = 0;
+    verbose->out_stats = 0;
+    verbose->percent = 0.0;
+
+    while ((c = fgetc(in)) != EOF) {
+        (verbose->in_stats)++;
+        length = length(codes[c]);
+        code = codes[c];
+        while (length > 0) {
+            (verbose->out_stats)++;
+            bit = code % 10;
+            code /= 10;
+            x |= bit;
+            leftToByte--;
+            length--;
+            if (leftToByte == 0) {
+                if (fputc(x, out) == EOF) {
+                    fprintf(stderr, "Błąd podczas zapisywania skompresowanych danych.\n");
+                    free(verbose);
+                    return NULL;
+                }
+                x = 0;
+                leftToByte = 8;
+            }
+            x = x << 1;
+        }
+    }
+
+    //dopelnienie
+    if (leftToByte != 8) {
+        x <<= (leftToByte - 1);
+        if (fputc(x, out) == EOF) {
+            fprintf(stderr, "Błąd podczas zapisywania skompresowanych danych.\n");
+            free(verbose);
+            return NULL;
+        }
+    }
+
+    verbose->in_stats *= 8;
+    verbose->percent = ((double) verbose->out_stats / verbose->in_stats) * 100;
+
+    return verbose;
+}
+/*
 verbose_t * compress (FILE * in, FILE * out, int * codes) {
 	char c;
 	char bit;
@@ -65,7 +144,7 @@ verbose_t * compress (FILE * in, FILE * out, int * codes) {
 
 	return verbose;
 }
-
+*/
 /*
 void compression_wrapper (int compression_type, FILE * in) {
 	if (compression_type == 0)
