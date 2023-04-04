@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-
-#define 8BIT_TABLE_SIZE 256
-#define 12BIT_TABLE_SIZE 4096
-#define 16BIT_TABLE_SIZE 65536
+#include <stdint.h>
+#include "input.h"
+#define SIZE8 256
+#define SIZE12 4096
+#define SIZE16 65536
 
 #define MAX_CHARS 256
 #define length(x) ((int)log10(x)+1)
@@ -148,18 +149,18 @@ verbose_t * compress (FILE * in, FILE * out, int * codes) {
 /*
 void compression_wrapper (int compression_type, FILE * in) {
 	if (compression_type == 0)
-		8_bit(in);
+		bit_8(in);
 	else if (compression_type == 1)
-		12_bit(in);
-	else 	16_bit(in);
+		bit_12(in);
+	else 	bit_16(in);
 }
 
 */
 
 //8bit reading wersja weroniki julii jastrzebskiej
 
-char* 8_bit(FILE* input) {
-    char* symbols = malloc(8BIT_TABLE_SIZE * sizeof(char)); 
+char* bit_8(FILE* input) {
+    char* symbols = malloc(SIZE8 * sizeof(char)); 
     if (symbols == NULL) {
         return NULL;
     }
@@ -190,8 +191,8 @@ char* 8_bit(FILE* input) {
 
 
 //12bit reading
-uint16_t * 12_bit(FILE * in) {//czy to zadziała????? kto wie
-    uint16_t *symbols = malloc(12BIT_TABLE_SIZE * sizeof(uint16_t)); // zczytane symbole
+uint16_t * bit_12(FILE * in) {//czy to zadziała????? kto wie
+    uint16_t *symbols = malloc(SIZE12 * sizeof(uint16_t)); // zczytane symbole
     uint16_t c;
     uint16_t bit;
     uint16_t buf = 0b000000000000;
@@ -211,8 +212,8 @@ uint16_t * 12_bit(FILE * in) {//czy to zadziała????? kto wie
 }
 
 //16bit reading
-    uint16_t *16_bit(FILE *in) {
-    uint16_t *symbols = malloc(16BIT_TABLE_SIZE * sizeof(uint16_t));
+    uint16_t *bit_16(FILE *in) {
+    uint16_t *symbols = malloc(SIZE16 * sizeof(uint16_t));
     uint16_t c;
     uint16_t bit;
     uint16_t buf = 0b0000000000000000;
