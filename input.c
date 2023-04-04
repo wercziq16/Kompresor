@@ -156,65 +156,87 @@ void compression_wrapper (int compression_type, FILE * in) {
 
 */
 
-/* a dupa do wyrzucenia
+//8bit reading wersja weroniki julii jastrzebskiej
 
-//8bit reading
+char* 8_bit(FILE* input) {
+    char* symbols = malloc(8BIT_TABLE_SIZE * sizeof(char)); 
+    if (symbols == NULL) {
+        return NULL;
+    }
 
-char * 8_bit(FILE * in) {
+    char c;
+    char bit;
+    char buf = 0b00000000;
+    char mask = 0b10000000; 
+    int i = 0;
 
-	char * symbols = malloc (8BIT_TABLE_SIZE * sizeof(char)); //zczytane symbole
-	char c;
-	char bit;
-	char buf  = 0b00000000;
-	char mask = 0b10000000; //maska bierze pod uwage tylko 1 bit wejscia
-	int i;
+    while ((c = fgetc(input)) != EOF) {
+        for (i = 0; i < 8; i++) {
+            bit = c & mask;
+            c <<= 1;
+            buf |= bit;
 
-	while ( (c = fgetc(input)) != EOF ) {
-		
-		for (i = 0; i < 8; i++) {
-			bit = c & mask;
-			c <<= 1;
-			buf |= bit;
-		}
+            if (i == 7) {
+                symbols[i] = buf;
+                buf = 0b00000000;
+            }
+        }
+    }
 
+    symbols[i] = buf;
+
+    return symbols;
+}
 
 
 //12bit reading
+uint16_t * 12_bit(FILE * in) {//czy to zadziała????? kto wie
+    uint16_t *symbols = malloc(12BIT_TABLE_SIZE * sizeof(uint16_t)); // zczytane symbole
+    uint16_t c;
+    uint16_t bit;
+    uint16_t buf = 0b000000000000;
+    uint16_t mask = 0b100000000000; // maska bierze pod uwagę tylko 1 bit wejścia
+    int i;
 
-char * 12_bit(FILE * in) {
+    while ((c = fgetc(in)) != EOF) {
+        for (i = 0; i < 12; i++) {
+            bit = c & mask;
+            c >>= 1; // przesuwamy w prawo, ponieważ czytamy dane w kolejności Little Endian
+            buf |= bit;
+        }
+    }
 
-	char * symbols = malloc (12BIT_TABLE_SIZE * sizeof(char)); //zczytane symbole
-	char c;
-	char bit;
-	char buf  = 0b000;
-	char mask = 0b100; //maska bierze pod uwage tylko 1 bit wejscia
-	int i;
 
-	while ( (c = fgetc(input)) != EOF ) {
-		
-		for (i = 0; i < 8; i++) {
-			bit = c & mask;
-			c <<= 1;
-			buf |= bit;
-		}
-	}
+    return symbols;
 }
 
 //16bit reading
+    uint16_t *16_bit(FILE *in) {
+    uint16_t *symbols = malloc(16BIT_TABLE_SIZE * sizeof(uint16_t));
+    uint16_t c;
+    uint16_t bit;
+    uint16_t buf = 0b0000000000000000;
+    uint16_t mask = 0b1000000000000000;
+    int i;
 
-char * 16_bit(FILE * in) {
+    while ((c = fgetc(in)) != EOF) {
+        for (i = 0; i < 16; i++) {
+            bit = c & mask;
+            c <<= 1;
+            buf |= bit;
+        }
 
-	char * symbols = malloc (8BIT_TABLE_SIZE * sizeof(char)); //zczytane symbole
-	char c;
-	char bit;
-	char buf  = 0b00000000;
-	char mask = 0b10000000; //maska bierze pod uwage tylko 1 bit wejscia
-	int i;
+        if (i % 16 == 0) {
+            symbols[i / 16 - 1] = buf;
+            buf = 0b0000000000000000;
+        }
+    }
 
-	while ( (c = fgetc(input)) != EOF ) {
-		
-		for (i = 0; i < 8; i++) {
-			bit = c & mask;
-			c <<= 1;
-			buf |= bit;
-		}
+    if (i % 16 != 0) {
+        symbols[i / 16] = buf;
+    }
+
+
+    return symbols;
+}
+
