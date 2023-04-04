@@ -39,7 +39,7 @@ unsigned int * getFrequency(FILE *in) {
 }
 
 //dopisac verbose
-verbose_t *compress(FILE *in, FILE *out, int *codes) {
+verbose_t * compress(FILE *in, FILE *out, int *codes) {
     char c;
     char bit;
     char x = 0;
