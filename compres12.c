@@ -1,21 +1,10 @@
+/*
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-// struktura węzła drzewa Huffman
-struct huff_node {
-    unsigned int freq; // częstotliwość występowania symbolu
-    unsigned short code; // kod Huffmana dla symbolu
-    struct huff_node *left; // wskaźnik na lewe poddrzewo
-    struct huff_node *right; // wskaźnik na prawe poddrzewo
-};
-
-// struktura kolejki priorytetowej
-struct priority_queue {
-    unsigned int size; // aktualny rozmiar kolejki
-    unsigned int capacity; // pojemność kolejki
-    struct huff_node **nodes; // tablica wskaźników na węzły drzewa
-};
+#include "compres12.h"
 
 // inicjalizacja węzła drzewa Huffman
 struct huff_node *new_huff_node(unsigned int freq, unsigned short code) {
@@ -35,6 +24,7 @@ struct priority_queue *new_priority_queue(unsigned int capacity) {
     queue->nodes = (struct huff_node**) malloc(capacity * sizeof(struct huff_node*));
     return queue;
 }
+
 
 // wstawienie węzła do kolejki priorytetowej
 void enqueue(struct priority_queue *queue, struct huff_node *node) {
@@ -209,3 +199,4 @@ int main() {
 	}
 return 0;
 }
+*/

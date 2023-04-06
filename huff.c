@@ -1,34 +1,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "huff.h"
+
 #define MAX_TREE_HT 16
-
-//struktura wezla drzewa
-
-typedef struct node {
-	unsigned char value;
-	unsigned int frequency;
-	struct node *left;
-	struct node *right;
-} node_t;
-
-
-//struktura do przechowywania wezlow w kolejce priorytetowej
-
-typedef struct line {
-	int size;
-	int capacity;
-	node_t **array;
-} line_t;
+#define MAX_CHARS 256
 
 //Funkcja tworzaca nowy węzeł drzewa z danymi i częstością wystąpienia
 
 node_t * newNode(unsigned char value, unsigned int frequency) {
+	
 	node_t *temp = (node_t *)malloc(sizeof(node_t));
     	
 	temp->left = temp->right = NULL;
-    	temp->value = value;
-    	temp->frequency = frequency;
+    temp->value = value;
+    temp->frequency = frequency;
     	
 	return temp;
 }
@@ -37,21 +23,20 @@ int countLeafs (unsigned int * frequency) {
 	int i;
 	int counter = 0;
 	for (i = 0; i < MAX_CHARS; i++)
-		if (chars[i] != NULL)
+		if (frequency[i] != 0)
 			counter++;
 	return counter;
 }
 
-node_t * makeLeafs (unsigned int * frequency) {
+node_t ** makeLeafs (unsigned int * frequency) {
 	int i;
 	int counter = countLeafs (frequency);
 
-	node_t * leafs = malloc(counter * sizeof(node_t));
+	node_t ** leafs = malloc(counter * sizeof(node_t*));
 
-	for (i = 0l i < MAX_CHARS; i++) {
-		if (frequency[i] == NULL)
-			return;
-		leafs[i] = newNode ('0' + i, frequency[i]);
+	for (i = 0; i < MAX_CHARS; i++) {
+		if (frequency[i] != 0)
+			leafs[i] = newNode ('0' + i, frequency[i]);
 	}
 
 	return leafs;
@@ -155,34 +140,34 @@ node_t *tree(unsigned char data[], unsigned int frequency[], int size) {
 
 //tworzenie slownika
 
-void printDict(node_t *root, char * arr, int top) {
+void printDict(node_t *root, char * arr, int top, FILE * out) {
 	if (root->left) {
 		arr[top] = 0;
-		printCodes(root->left, arr, top + 1);
+		printRecord(root->left, arr, top + 1);
 	}
 
 	if (root->right) {
 		arr[top] = 1;
-		printCodes(root->right, arr, top + 1);
+		printRecord(root->right, arr, top + 1);
 	}
 
 	if (isLeaf(root)) {
  	  	fprintf(out, "%c: ", root->value);
-    		printRecord(arr, top, out);
+    	printRecord(arr, top, out);
 	}
 }
 
-void HuffmanCodes(unsigned char data[], unsigned int frequency[], int size) {
+void HuffmanCodes(unsigned char data[], unsigned int frequency[], int size, FILE * out) {
 	node_t *root = tree(data, frequency, size);
 	int arr[MAX_TREE_HT], top = 0;
-	printDict(root, arr, top);
+	printDict(root, arr, top, out);
 }
 
 /*
 void compress(FILE *in, FILE *out, unsigned char data[], unsigned int frequency[]) {
 
 
-
+*/
 
 
 

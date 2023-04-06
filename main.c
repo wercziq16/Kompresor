@@ -3,7 +3,7 @@
 
 #include "help.h"
 #include "input.h"
-#include "huffman.h"
+#include "huff.h"
 
 #define MAX_CHARS 256
 
@@ -21,19 +21,18 @@ int main (int argc, char **argv)
 	FILE * out = fopen(argv[3], "w");
 
 	if (in == NULL) {
-		print_open();
+		print_in_open();
 		print_help();
 		return EXIT_FAILURE;
 	}
 
 	if (out == NULL) {
-		print_open();
+		print_out_open();
 		print_help();
 		return EXIT_FAILURE;
 	}
 
 	frequency = getFrequency(in);
-
 	
 }
 

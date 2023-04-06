@@ -1,14 +1,12 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <stdint.h>
 #include "input.h"
+
 #define SIZE8 256
 #define SIZE12 4096
 #define SIZE16 65536
-
 #define MAX_CHARS 256
+
 #define length(x) ((int)log10(x)+1)
+
 /*
 unsigned int * getFrequency (FILE * in) {
 	char c;
@@ -212,7 +210,7 @@ uint16_t * bit_12(FILE * in) {//czy to zadziała????? kto wie
 }
 
 //16bit reading
-    uint16_t *bit_16(FILE *in) {
+uint16_t *bit_16(FILE *in) {
     uint16_t *symbols = malloc(SIZE16 * sizeof(uint16_t));
     uint16_t c;
     uint16_t bit;
