@@ -1,7 +1,9 @@
+
+
 #include "dekompresor.h"
 #include "huff.h"
 
-void huffman_decode_16_bit(node_t* root, FILE* input_file, FILE* output_file) {
+void huffman_decode_16_bit(node_t* root, FILE * input_file, FILE * output_file) {
     node_t* current = root;
     unsigned char buffer[2];
     buffer[1] = fgetc(input_file);

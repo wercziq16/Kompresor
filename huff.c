@@ -5,6 +5,8 @@
 
 #define MAX_TREE_HT 16
 
+#define MAX_CHARS 256 
+
 #define MAX_VALUE_8_BIT 255
 #define MAX_VALUE_12_BIT 4095
 #define MAX_VALUE_16_BIT 65535
@@ -143,7 +145,7 @@ node_t *tree(unsigned char data[], unsigned int frequency[], int size) {
 
 //tworzenie slownika
 
-void printDict(node_t *root, char * arr, int top, FILE * out) {
+void printDict(node_t *root, int * arr, int top, FILE * out) {
 	if (root->left) {
 		arr[top] = 0;
 		printRecord(root->left, arr, top + 1);
