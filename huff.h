@@ -49,7 +49,7 @@ line_t *build(unsigned char data[], unsigned int frequency[], int size);
 
 node_t *tree(unsigned char data[], unsigned int frequency[], int size);
 
-void printDict(node_t *root, char * arr, int top, FILE * out);
+void printDict(node_t *root, int * arr, int top, FILE * out);
 
 void HuffmanCodes(unsigned char data[], unsigned int frequency[], int size, FILE * out);
 #endif

@@ -16,7 +16,9 @@ unsigned int * getFrequency (FILE * in) {
 	return * frequency;
 }
 */
-unsigned int * getFrequency(FILE *in) {
+
+/*
+unsigned int * getFrequency_8bit(FILE *in) {
     if (in == NULL) {
         fprintf(stderr, "Nie można odczytać pliku.\n");
         return NULL;
@@ -37,7 +39,10 @@ unsigned int * getFrequency(FILE *in) {
     return frequency;
 }
 
+*/
+
 //dopisac verbose
+
 verbose_t * compress(FILE *in, FILE *out, int *codes) {
     char c;
     char bit;

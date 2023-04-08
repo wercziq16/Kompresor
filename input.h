@@ -12,6 +12,12 @@ typedef struct verbose {
 	double percent;
 } verbose_t;
 
+typedef struct {
+    unsigned int *frequency;
+    int is_padded;
+    int num_zeros_padded;
+} FrequencyResult_12bit;
+
 unsigned int * getFrequency (FILE * in);
 verbose_t * compress (FILE * in, FILE * out, int * frequency);
 

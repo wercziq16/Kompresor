@@ -110,9 +110,9 @@ void buildHeap(line_t *minHeap) {
     		fixHeap(minHeap, i);
 }
 
-void printRecord(int arr[], int n, FILE * out) {
+void printRecord(int arr[], int top, FILE * out) {
     	int i;
-	for (i = 0; i < n; ++i)
+		for (i = 0; i < top; ++i)
         	fprintf(out, "%d", arr[i]);
     	fprintf(out, "\n");
 }
@@ -149,12 +149,12 @@ node_t *tree(unsigned char data[], unsigned int frequency[], int size) {
 void printDict(node_t *root, int * arr, int top, FILE * out) {
 	if (root->left) {
 		arr[top] = 0;
-		printRecord(root->left, arr, top + 1);
+		printDict(root->left, arr, top + 1, out);
 	}
 
 	if (root->right) {
 		arr[top] = 1;
-		printRecord(root->right, arr, top + 1);
+		printDict(root->right, arr, top + 1, out);
 	}
 
 	if (isLeaf(root)) {
@@ -171,8 +171,6 @@ void HuffmanCodes(unsigned char data[], unsigned int frequency[], int size, FILE
 
 /*
 void compress(FILE *in, FILE *out, unsigned char data[], unsigned int frequency[]) {
-
-
 */
 
 

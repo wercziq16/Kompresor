@@ -11,14 +11,11 @@
 
 int main (int argc, char **argv)
 {
-    char * data = calloc(MAX_CHARS, sizeof(char));
-	unsigned int * frequency = calloc(MAX_CHARS, sizeof(int));
-
-	int compression_level = 0; // domyślnie brak kompresji
+		int compression_level = 0; // domyślnie brak kompresji
     	int show_stats = 0; // domyślnie nie wyświetlamy statystyk
     	int decompress = 0; // domyślnie tryb kompresji
     
-   	 // przeszukiwanie argumentów
+   	 	// przeszukiwanie argumentów
     	for (int i = 3; i < argc; i++) {
         	if (strcmp(argv[i], "-0") == 0) {
             		compression_level = 0;
@@ -58,8 +55,8 @@ int main (int argc, char **argv)
 		exit(6);
 	}
 
-	FILE * in = fopen(argv[2], "r");
-	FILE * out = fopen(argv[3], "w");
+	FILE * in = fopen(argv[1], "r");
+	FILE * out = fopen(argv[2], "w");
 
 	if (in == NULL) {
 		print_in_open();
