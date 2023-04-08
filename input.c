@@ -240,7 +240,6 @@ uint16_t *bit_16(FILE *in) {
         symbols[i / 16] = buf;
     }
 
-
     return symbols;
 }
 

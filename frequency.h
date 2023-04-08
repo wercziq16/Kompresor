@@ -14,6 +14,6 @@ FrequencyResult *getFrequency_8bit(FILE *in);
 FrequencyResult *getFrequency_12bit(FILE *in);
 FrequencyResult *getFrequency_16bit(FILE *in);
 
-void getFrequency(int compression_level, FILE *in);
+FrequencyResult *getFrequency(int compression_level, FILE *in);
 
 #endif

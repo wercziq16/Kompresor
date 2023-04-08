@@ -6,8 +6,8 @@
 #include "help.h"
 #include "input.h"
 #include "huff.h"
-
-#define MAX_CHARS 256
+#include "frequency.h"
+#include "dekompresor.h"
 
 int main (int argc, char **argv)
 {
@@ -70,7 +70,7 @@ int main (int argc, char **argv)
 		exit(8);
 	}
 
-	frequency = getFrequency(in);
+	FrequencyResult * frequency = getFrequency(compression_level, in);
 	
 }
 
