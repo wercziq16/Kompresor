@@ -1,10 +1,13 @@
-#include <stdio.h>
+
 #include <stdlib.h>
 
 #include "huff.h"
 
 #define MAX_TREE_HT 16
-#define MAX_CHARS 256
+
+#define MAX_VALUE_8_BIT 255
+#define MAX_VALUE_12_BIT 4095
+#define MAX_VALUE_16_BIT 65535
 
 //Funkcja tworzaca nowy węzeł drzewa z danymi i częstością wystąpienia
 
@@ -13,8 +16,8 @@ node_t * newNode(unsigned char value, unsigned int frequency) {
 	node_t *temp = (node_t *)malloc(sizeof(node_t));
     	
 	temp->left = temp->right = NULL;
-    temp->value = value;
-    temp->frequency = frequency;
+	temp->value = value;
+    	temp->frequency = frequency;
     	
 	return temp;
 }
@@ -153,7 +156,7 @@ void printDict(node_t *root, char * arr, int top, FILE * out) {
 
 	if (isLeaf(root)) {
  	  	fprintf(out, "%c: ", root->value);
-    	printRecord(arr, top, out);
+    		printRecord(arr, top, out);
 	}
 }
 
