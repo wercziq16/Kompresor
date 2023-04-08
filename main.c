@@ -11,7 +11,7 @@
 
 int main (int argc, char **argv)
 {
-    	char * data = calloc(MAX_CHARS, sizeof(char));
+    char * data = calloc(MAX_CHARS, sizeof(char));
 	unsigned int * frequency = calloc(MAX_CHARS, sizeof(int));
 
 	int compression_level = 0; // domyślnie brak kompresji
@@ -29,22 +29,22 @@ int main (int argc, char **argv)
        		} else if (strcmp(argv[i], "-3") == 0) {
         	    	compression_level = 3;
        		} else if (strcmp(argv[i], "-v") == 0) {
-           		 show_stats = 1;
+           		 	show_stats = 1;
         	} else if (strcmp(argv[i], "-d") == 0) {
-           		 decompress = 1;
+           		 	decompress = 1;
        		} else {
-            		printf("Nieznana flaga: %s\n", argv[i]);
+            		fprintf(stderr, "Nieznana flaga: %s\n", argv[i]);
             		exit(2);
-       		 }
+       		}
   	  }	
     
 	if (compression_level!=0 && decompress==1){
-		printf("Nie można jednocześnie skompresować i zdekompresować pliku.");
+		fprintf(stderr, "Nie można jednocześnie skompresować i zdekompresować pliku.\n");
 		exit(3);
 	}
 
 	if (show_stats==1 && decompress==1){
-		printf("Nie obsługujemy opcji pokazywania statystyk z dekompresji.");
+		fprintf(stderr, "Nie obsługujemy opcji pokazywania statystyk z dekompresji.\n");
 		exit(4);
 	}
 	
@@ -54,7 +54,7 @@ int main (int argc, char **argv)
 	}
 
 	if (strcmp(argv[1], argv[2])==0){
-		printf("Błąd. Podano ten sam plik na wejście i wyjście.");
+		fprintf(stderr, "Błąd. Podano ten sam plik na wejście i wyjście.\n");
 		exit(6);
 	}
 

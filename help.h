@@ -16,13 +16,13 @@ char *help = "Pomoc programu kompresor/dekompresor\n"
              "\t-v statystyki kompresji\n"
              "\t-d uruchomienie dekompresji\n";
 
-char * in_open = "Nie udalo sie otworzyc pliku wejsciowego\n";
-char * out_open = "Nie udalo sie otworzyc pliku wyjsciowego\n";
+char * in_open = "Nie udalo sie otworzyc pliku wejsciowego.\n";
+char * out_open = "Nie udalo sie otworzyc pliku wyjsciowego.\n";
 
 void print_help();
 
-void print_in_open( );
+void print_in_open();
 
-void print_out_open( );
+void print_out_open();
 
 #endif

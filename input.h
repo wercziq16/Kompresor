@@ -19,5 +19,4 @@ char* bit_8(FILE* input);
 uint16_t * bit_12(FILE * in);
 uint16_t *bit_16(FILE *in);
 
-
 #endif

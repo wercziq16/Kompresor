@@ -3,6 +3,7 @@
 #define SIZE8 256
 #define SIZE12 4096
 #define SIZE16 65536
+
 #define MAX_CHARS 256
 
 #define length(x) ((int)log10(x)+1)
@@ -204,7 +205,6 @@ uint16_t * bit_12(FILE * in) {//czy to zadziała????? kto wie
             buf |= bit;
         }
     }
-
 
     return symbols;
 }
