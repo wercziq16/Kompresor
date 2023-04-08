@@ -34,28 +34,28 @@ int main (int argc, char **argv)
            		 decompress = 1;
        		} else {
             		printf("Nieznana flaga: %s\n", argv[i]);
-            		exit(EXIT_FAILURE);
+            		exit(2);
        		 }
   	  }	
     
 	if (compression_level!=0 && decompress==1){
 		printf("Nie można jednocześnie skompresować i zdekompresować pliku.");
-		exit(EXIT_FAILURE);
+		exit(3);
 	}
 
 	if (show_stats==1 && decompress==1){
 		printf("Nie obsługujemy opcji pokazywania statystyk z dekompresji.");
-		exit(EXIT_FAILURE);
+		exit(4);
 	}
 	
 	if (argc < 3) {
 		print_help();
-		exit(EXIT_FAILURE);
+		exit(5);
 	}
 
 	if (strcmp(argv[1], argv[2])==0){
 		printf("Błąd. Podano ten sam plik na wejście i wyjście.");
-		exit(EXIT_FAILURE);
+		exit(6);
 	}
 
 	FILE * in = fopen(argv[2], "r");
@@ -64,13 +64,13 @@ int main (int argc, char **argv)
 	if (in == NULL) {
 		print_in_open();
 		print_help();
-		exit(EXIT_FAILURE);
+		exit(7);
 	}
 
 	if (out == NULL) {
 		print_out_open();
 		print_help();
-		exit(EXIT_FAILURE);
+		exit(8);
 	}
 
 	frequency = getFrequency(in);
