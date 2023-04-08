@@ -21,7 +21,7 @@ node_t * newNode(unsigned char value, unsigned int frequency) {
     	
 	return temp;
 }
-
+/*
 int countLeafs (unsigned int * frequency) {
 	int i;
 	int counter = 0;
@@ -30,6 +30,7 @@ int countLeafs (unsigned int * frequency) {
 			counter++;
 	return counter;
 }
+
 
 node_t ** makeLeafs (unsigned int * frequency) {
 	int i;
@@ -44,6 +45,8 @@ node_t ** makeLeafs (unsigned int * frequency) {
 
 	return leafs;
 }
+
+*/
 
 line_t *createline(int capacity) {
 	line_t *minHeap = (line_t *)malloc(sizeof(line_t));
@@ -143,7 +146,7 @@ node_t *tree(unsigned char data[], unsigned int frequency[], int size) {
 
 //tworzenie slownika
 
-void printDict(node_t *root, char * arr, int top, FILE * out) {
+void printDict(node_t *root, int * arr, int top, FILE * out) {
 	if (root->left) {
 		arr[top] = 0;
 		printRecord(root->left, arr, top + 1);
