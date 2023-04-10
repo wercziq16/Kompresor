@@ -13,7 +13,7 @@ typedef struct verbose {
 } verbose_t;
 
 //unsigned int * getFrequency (FILE * in);
-verbose_t * compress (FILE * in, FILE * out, int * frequency);
+verbose_t * compress (FILE * in, FILE * out, int * codes);
 
 char* bit_8(FILE* input);
 uint16_t * bit_12(FILE * in);
