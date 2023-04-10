@@ -79,9 +79,12 @@ int main (int argc, char **argv)
 		uint16_t * frequency = getFrequency_8bit(in);
 		uint16_t * data = data_maker(compression_level);
 		uint16_t size = (uint16_t)MAX_CHARACTERS_8;
-		//huffmanCodes(data, frequency, size, compression_level, out);
-
+		huffmanCodes(data, frequency, size, compression_level, out);
 	
+
+	fclose(in);
+	fclose(out);
+	fclose(pfile);
 }
 
 	

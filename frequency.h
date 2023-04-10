@@ -20,11 +20,12 @@ FrequencyResult *getFrequency_16bit(FILE *in);
 FrequencyResult *getFrequency(int compression_level, FILE *in);
 */
 
+int countNonZeroFrequency(uint16_t * frequency);
+
 uint16_t *getFrequency_8bit(FILE *in);
 uint16_t *getFrequency_12bit(FILE *in);
 uint16_t *getFrequency_16bit(FILE *in);
 
 uint16_t *getFrequency(int compression_level, FILE *in);
-
 
 #endif
