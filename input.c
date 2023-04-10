@@ -160,8 +160,63 @@ void compression_wrapper (int compression_type, FILE * in) {
 }
 
 */
+#define BUFFER_SIZE 1024
+//proba testu
 
-//8bit reading wersja weroniki julii jastrzebskiej
+
+
+
+void compress_file(char *input_filename, char *output_filename, int *huffman_codes) {
+    // otwieranie plików wejściowego i wyjściowego
+    FILE *input_file = fopen(input_filename, "rb");
+    if (input_file == NULL) {
+        printf("Nie można otworzyć pliku wejściowego: %s\n", input_filename);
+        exit(1);
+    }
+
+    FILE *output_file = fopen(output_filename, "wb");
+    if (output_file == NULL) {
+        printf("Nie można otworzyć pliku wyjściowego: %s\n", output_filename);
+        exit(1);
+    }
+
+    // odczytywanie danych wejściowych w buforze
+    unsigned char buffer[BUFFER_SIZE];
+    int read_count, i, j;
+    int bit_count = 0; // ilość bitów w aktualnie kompresowanym bajcie
+    unsigned char compressed_byte = 0; // aktualnie kompresowany bajt
+
+    while ((read_count = fread(buffer, sizeof(unsigned char), BUFFER_SIZE, input_file)) > 0) {
+        for (i = 0; i < read_count; i++) {
+            // dodawanie kodu Huffmana dla bieżącego znaku do bufora bitów
+            int code = huffman_codes[buffer[i]];
+            int code_bits_count = (int)log2(code) + 1; // ilość bitów w kodzie Huffmana dla bieżącego znaku
+            for (j = code_bits_count - 1; j >= 0; j--) { // iterowanie po bitach kodu od prawej do lewej
+                int bit = (code >> j) & 1; // pobieranie j-tego bitu kodu Huffmana
+                compressed_byte = (compressed_byte << 1) | bit; // dodanie bitu do aktualnie kompresowanego bajtu
+                bit_count++;
+
+                if (bit_count == 8) { // jeśli aktualny bajt jest pełny, zapisujemy go do pliku wyjściowego
+                    fwrite(&compressed_byte, sizeof(unsigned char), 1, output_file);
+		    printf("Bajt: %02X, liczba: %d\n", compressed_byte, (int)compressed_byte);
+                    compressed_byte = 0;
+                    bit_count = 0;
+                }
+            }
+        }
+    }
+
+    // jeśli ostatni bajt nie jest pełny, to trzeba go uzupełnić zerami
+    if (bit_count > 0) {
+        compressed_byte = compressed_byte << (8 - bit_count);
+        fwrite(&compressed_byte, sizeof(unsigned char), 1, output_file);
+	printf("Bajt: %02X, liczba: %d\n", compressed_byte, (int)compressed_byte);
+    }
+
+    // zamykanie plików i zwalnianie pamięci
+    fclose(input_file);
+    fclose(output_file);
+}
 
 char* bit_8(FILE* input) {
     char* symbols = malloc(SIZE8 * sizeof(char)); 

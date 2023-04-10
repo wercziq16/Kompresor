@@ -61,6 +61,7 @@ int main (int argc, char **argv)
 	FILE * in = fopen(argv[1], "r");
 	FILE * out = fopen(argv[2], "w");
 	FILE * pfile = fopen("padded.txt", "w+");
+	FILE * nowy = fopen("nowy.txt", "wb");
 
 	if (in == NULL) {
 		print_in_open();
@@ -83,12 +84,12 @@ int main (int argc, char **argv)
 		
 		fclose(in);
 		in = fopen(argv[1], "r");
-		compress(in, out, codes);
-
+		//compress(in, out, codes);
+		compress_file("ala.txt", "nowy.txt", codes);
 		fclose(out);
 		FILE *dictionary = fopen("out.txt", "r");
 		char* compressed = bit_8(dictionary);
-		printf("%s", compressed);
+		//printf("%s", compressed);
 	
 }
 

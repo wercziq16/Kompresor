@@ -14,7 +14,7 @@ typedef struct verbose {
 
 //unsigned int * getFrequency (FILE * in);
 verbose_t * compress (FILE * in, FILE * out, int * codes);
-
+void compress_file(char *input_filename, char *output_filename, int *huffman_codes);
 char* bit_8(FILE* input);
 uint16_t * bit_12(FILE * in);
 uint16_t *bit_16(FILE *in);
