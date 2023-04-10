@@ -2,6 +2,8 @@
 
 uint16_t * data_maker(int compression_type){
     
+    fprintf(stderr, "dziala datamaker\n");
+
     uint16_t n;
 
     if (compression_type == 2) {
@@ -26,6 +28,9 @@ uint16_t * data_maker(int compression_type){
 
 
 node_16* createNode(uint16_t data, uint16_t frequency) {
+    
+    fprintf(stderr, "dziala createnode\n");
+
     node_16* node = (node_16*)malloc(sizeof(node_16));
     node->data = data;
     node->frequency = frequency;
@@ -35,12 +40,18 @@ node_16* createNode(uint16_t data, uint16_t frequency) {
 }
 
 void swapNodes(node_16** a, node_16** b) {
+    
+        fprintf(stderr, "dziala swapnodes \n");
+
     node_16* temp = *a;
     *a = *b;
     *b = temp;
 }
 
 void heapify(MinHeap* heap, uint16_t index) {
+    
+        fprintf(stderr, "dziala heapify\n");
+    
     uint16_t smallest = index;
     uint16_t left = 2 * index + 1;
     uint16_t right = 2 * index + 2;
@@ -58,10 +69,12 @@ void heapify(MinHeap* heap, uint16_t index) {
 }
 
 int isSizeOne(MinHeap* heap) {
+      fprintf(stderr, "dziala issizeone\n");
     return heap->size == 1;
 }
 
 node_16* extractMin(MinHeap* heap) {
+        fprintf(stderr, "dziala extractmin\n");
     node_16* minNode = heap->array[0];
     heap->array[0] = heap->array[heap->size - 1];
     --heap->size;
@@ -70,6 +83,7 @@ node_16* extractMin(MinHeap* heap) {
 }
 
 void insertNode(MinHeap* heap, node_16* node) {
+        fprintf(stderr, "dziala insertnode\n");
     ++heap->size;
     uint16_t i = heap->size - 1;
     while (i && node->frequency < heap->array[(i - 1) / 2]->frequency) {
@@ -80,20 +94,23 @@ void insertNode(MinHeap* heap, node_16* node) {
 }
 
 int isLeaf(node_16* node) {
+        fprintf(stderr, "dziala isleaf\n");
     return !(node->left) && !(node->right);
 }
 
 node_16* buildHuffmanTree(uint16_t* data, uint16_t* frequency, uint16_t size) {
+        fprintf(stderr, "dziala buildhuffmantree\n");
     MinHeap* heap = (MinHeap*) malloc(sizeof(MinHeap));
     heap->size = 0;
     heap->capacity = size;
     heap->array = (node_16**) malloc(heap->capacity * sizeof(node_16*));
+    uint16_t i;
 
-    for (uint16_t i = 0; i < size; ++i)
+    for (i = 0; i < size; ++i)
         heap->array[i] = createNode(data[i], frequency[i]);
 
     heap->size = size;
-    for (uint16_t i = (size - 1) / 2; i >= 0; --i)
+    for (i = ((size - 1) / 2); i >= 0; --i)
         heapify(heap, i);
 
     while (!isSizeOne(heap)) {
@@ -114,6 +131,7 @@ node_16* buildHuffmanTree(uint16_t* data, uint16_t* frequency, uint16_t size) {
 }
 
 void printHuffmanCodes(node_16* node, char* code, int top, FILE * out) {
+        fprintf(stderr, "dziala printhuffmancodes\n");
     if (node->left) {
     code[top] = '0';
     printHuffmanCodes(node->left, code, top + 1, out);
@@ -131,6 +149,7 @@ void printHuffmanCodes(node_16* node, char* code, int top, FILE * out) {
 }
 
 void huffmanCodes(uint16_t * data, uint16_t * frequency, uint16_t size, int compression_level, FILE * out) {
+        fprintf(stderr, "dziala huffmancodes\n");
     node_16* root = buildHuffmanTree(data, frequency, size);
     int height;
 

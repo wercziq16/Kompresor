@@ -180,6 +180,16 @@ FrequencyResult *getFrequency_16bit (FILE *in) {
 }
 */
 
+int countNonZeroFrequency(uint16_t * frequency){
+    int i;
+    int counter = 0;
+    for (i = 0; i < (int)SIZE8; i++){
+        if (frequency[i] != 0)
+            counter++;
+    }
+    return counter;
+}
+
 uint16_t* getFrequency_8bit(FILE* in) {
     
     uint16_t* frequency = calloc(SIZE8, sizeof(uint16_t));
