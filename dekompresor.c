@@ -1,8 +1,8 @@
 #include "dekompresor.h"
-#include "huff.h"
+#include "huffman16.h"
 
-void huffman_decode_16_bit(node_t* root, FILE* input_file, FILE* output_file) {
-    node_t* current = root;
+void huffman_decode_16_bit(node_16* root, FILE* input_file, FILE* output_file) {
+    node_16* current = root;
     unsigned char buffer[2];
     buffer[1] = fgetc(input_file);
     while (!feof(input_file)) {
@@ -16,15 +16,15 @@ void huffman_decode_16_bit(node_t* root, FILE* input_file, FILE* output_file) {
                 current = current->right;
             }
             if (current->left == NULL && current->right == NULL) {
-                fputc(current->value, output_file);
+                fputc(current->data, output_file);
                 current = root;
             }
         }
     }
 }
 
-void huffman_decode_12_bit(node_t* root, FILE* input_file, FILE* output_file) {
-    node_t* current = root;
+void huffman_decode_12_bit(node_16* root, FILE* input_file, FILE* output_file) {
+    node_16* current = root;
     unsigned char buffer[2];
     buffer[1] = fgetc(input_file);
     while (!feof(input_file)) {
@@ -38,15 +38,15 @@ void huffman_decode_12_bit(node_t* root, FILE* input_file, FILE* output_file) {
                 current = current->right;
             }
             if (current->left == NULL && current->right == NULL) {
-                fputc(current->value, output_file);
+                fputc(current->data, output_file);
                 current = root;
             }
         }
     }
 }
 
-void huffman_decode_8_bit(node_t* root, FILE* input_file, FILE* output_file) {
-    node_t* current = root;
+void huffman_decode_8_bit(node_16* root, FILE* input_file, FILE* output_file) {
+    node_16* current = root;
     unsigned char buffer = fgetc(input_file);
     while (!feof(input_file)) {
         for (int i = 0; i < 8; i++) {
@@ -56,7 +56,7 @@ void huffman_decode_8_bit(node_t* root, FILE* input_file, FILE* output_file) {
                 current = current->right;
             }
             if (current->left == NULL && current->right == NULL) {
-                fputc(current->value, output_file);
+                fputc(current->data, output_file);
                 current = root;
             }
         }

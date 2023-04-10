@@ -1,13 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h> //do strcmp
+#include <stdint.h>
 
 #include "suma.h"
 #include "help.h"
 #include "input.h"
-#include "huff.h"
+#include "huffman16.h"
 #include "frequency.h"
 #include "dekompresor.h"
+#include "kompresor.h"
+#include "padding.h"
 
 int main (int argc, char **argv)
 {
@@ -57,6 +60,7 @@ int main (int argc, char **argv)
 
 	FILE * in = fopen(argv[1], "r");
 	FILE * out = fopen(argv[2], "w");
+	FILE * pfile = fopen("padded.txt", "w+");
 
 	if (in == NULL) {
 		print_in_open();
@@ -70,24 +74,15 @@ int main (int argc, char **argv)
 		exit(8);
 	}
 
-	FrequencyResult * frequency = getFrequency(compression_level, in);
+	if (decompress == 0 && compression_level == 0)
+	{
+		uint16_t * frequency = getFrequency_8bit(in);
+		uint16_t * data = data_maker(compression_level);
+		uint16_t size = (uint16_t)MAX_CHARACTERS_8;
+		huffmanCodes(data, frequency, size, compression_level, out);
+	}
+	else exit(9);
 	
 }
-
-	/*
-
-	if ( atoi(argv[4][1] == 0) ) {
-		if ( atoi(argv[4][2]) == 0 )
-			compression_type = 8_bit;	
-		else if ( atoi(argv[4][2] == 1) )
-			compression_type = 12_bit;
-		else if ( atoi(argv[4][2] == 2) )
-			compression_type = 16_bit;
-	} else compression_type = 8_bit;
-
-	int compression_type = (atoi(argv[4][1]) == 0 && atoi(argv[4][2]) < 3) ? (atoi(argv[4][2])) : 0;
-
-	*/
-
 
 	

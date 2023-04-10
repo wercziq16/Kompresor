@@ -2,9 +2,9 @@
 #define _DEKOMPRESOR_H_
 
 #include <stdio.h>
-#include "huff.h"
-void huffman_decode_12_bit(node_t* root, FILE* input_file, FILE* output_file);
-void huffman_decode_8_bit(node_t* root, FILE* input_file, FILE* output_file);
-void huffman_decode_16_bit(node_t* root, FILE* input_file, FILE* output_file);
+#include "huffman16.h"
+void huffman_decode_12_bit(node_16* root, FILE* in, FILE* out);
+void huffman_decode_8_bit(node_16* root, FILE* in, FILE* out);
+void huffman_decode_16_bit(node_16* root, FILE* in, FILE* out);
 
 #endif
