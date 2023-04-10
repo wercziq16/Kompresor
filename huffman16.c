@@ -103,7 +103,7 @@ node_16* buildHuffmanTree(uint16_t* data, uint16_t* frequency, uint16_t size) {
     MinHeap* heap = (MinHeap*) malloc(sizeof(MinHeap));
     heap->size = 0;
     heap->capacity = size;
-    heap->array = (node_16**) malloc(heap->capacity * sizeof(node_16*));
+    heap->array = (node_16**)malloc(heap->capacity * sizeof(node_16*));
     uint16_t i;
 
     for (i = 0; i < size; ++i)
@@ -160,5 +160,5 @@ void huffmanCodes(uint16_t * data, uint16_t * frequency, uint16_t size, int comp
     else height = (int)MAX_TREE_8;
 
     char code[height], c;
-    printHuffmanCodes(root, code, 0, out);
-}
+
+    printHuffmanCodes(root, code, 0, out);}
