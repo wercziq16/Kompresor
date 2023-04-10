@@ -80,6 +80,7 @@ int main (int argc, char **argv)
 		uint16_t * data = data_maker(compression_level);
 		uint16_t size = (uint16_t)MAX_CHARACTERS_8;
 		huffmanCodes(data, frequency, size, compression_level, out);
+		
 	}
 	else exit(9);
 	
