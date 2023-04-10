@@ -1,7 +1,8 @@
 {
     "files.associations": {
         "huff.h": "c",
-        "huffman16.h": "c"
+        "huffman16.h": "c",
+        "stdio.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

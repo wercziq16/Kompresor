@@ -188,9 +188,15 @@ uint16_t* getFrequency_8bit(FILE* in) {
         return NULL;
     }
 
+    fseek(in, 0L, SEEK_END);
+    long file_size = ftell(in);
+    fseek(in, 0L, SEEK_SET);
+
     unsigned char c;
-    while ((c = fgetc(in)) != EOF) {
+    while (file_size!=0) {
+        c = fgetc(in);
         frequency[c]++;
+        file_size--;
     }
 
     return frequency;
@@ -208,7 +214,11 @@ uint16_t * getFrequency_12bit(FILE * in){
     uint16_t buffer = 0; // buffer to store the bits read from the file
     int bits_read = 0; // number of bits read so far
 
-    while (!feof(in)) {
+    fseek(in, 0L, SEEK_END);
+    long file_size = ftell(in);
+    fseek(in, 0L, SEEK_SET);
+
+    while (file_size>0) {
         unsigned char c = fgetc(in);
         for (int i = 0; i < 8; i++) {
             buffer = (buffer << 1) | ((c >> (7 - i)) & 1); // shift the buffer left by 1 bit and add the next bit from the file
@@ -219,6 +229,7 @@ uint16_t * getFrequency_12bit(FILE * in){
                 bits_read = 0;
             }
         }
+        file_size--;
     }
 
     return frequency;
@@ -233,7 +244,12 @@ uint16_t* getFrequency_16bit(FILE* in) {
 
     uint16_t buffer = 0; // buffer to store the bits read from the file
     int bits_read = 0; // number of bits read so far
-    while (!feof(in)) {
+
+    fseek(in, 0L, SEEK_END);
+    long file_size = ftell(in);
+    fseek(in, 0L, SEEK_SET);
+    
+    while (file_size > 0) {
         unsigned char c = fgetc(in);
         buffer = (buffer << 8) | c; // shift the buffer left by 8 bits and add the next 8 bits from the file
         bits_read += 8;
@@ -242,6 +258,7 @@ uint16_t* getFrequency_16bit(FILE* in) {
             buffer = 0; // reset the buffer for the next 16 bits
             bits_read = 0;
         }
+        file_size--;
     }
     return frequency;
 }

@@ -74,15 +74,13 @@ int main (int argc, char **argv)
 		exit(8);
 	}
 
-	if (decompress == 0 && compression_level == 0)
-	{
+//	if (decompress == 0 && compression_level == 0)
+//	{
 		uint16_t * frequency = getFrequency_8bit(in);
 		uint16_t * data = data_maker(compression_level);
 		uint16_t size = (uint16_t)MAX_CHARACTERS_8;
-		huffmanCodes(data, frequency, size, compression_level, out);
-		
-	}
-	else exit(9);
+		//huffmanCodes(data, frequency, size, compression_level, out);
+
 	
 }
 
