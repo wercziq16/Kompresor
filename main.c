@@ -14,7 +14,7 @@
 
 int main (int argc, char **argv)
 {
-		int compression_level = 0; // domyślnie brak kompresji
+	int compression_level = 0; // domyślnie brak kompresji
     	int show_stats = 0; // domyślnie nie wyświetlamy statystyk
     	int decompress = 0; // domyślnie tryb kompresji
     
@@ -79,8 +79,16 @@ int main (int argc, char **argv)
 		uint16_t * frequency = getFrequency_8bit(in);
 		uint16_t * data = data_maker(compression_level);
 		uint16_t size = (uint16_t)MAX_CHARACTERS_8;
-		//huffmanCodes(data, frequency, size, compression_level, out);
+		int *codes = huffmanCodes(data, frequency, size, compression_level, out);
+		
+		fclose(in);
+		in = fopen(argv[1], "r");
+		compress(in, out, codes);
 
+		fclose(out);
+		FILE *dictionary = fopen("out.txt", "r");
+		char* compressed = bit_8(dictionary);
+		printf("%s", compressed);
 	
 }
 

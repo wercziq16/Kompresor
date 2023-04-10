@@ -74,7 +74,7 @@ verbose_t * compress(FILE *in, FILE *out, int *codes) {
             leftToByte--;
             length--;
             if (leftToByte == 0) {
-                if (fputc(x, out) == EOF) {
+                if (putc(x, stdout) == EOF) {
                     fprintf(stderr, "Błąd podczas zapisywania skompresowanych danych.\n");
                     free(verbose);
                     return NULL;

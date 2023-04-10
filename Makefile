@@ -1,4 +1,5 @@
 CC = cc
+CFLAGS = -g
 LDLIBS = -lm
 
 SRCS = main.c huffman16.c help.c input.c frequency.c suma.c kompresor.c dekompresor.c padding.c
@@ -12,7 +13,11 @@ program: $(OBJS)
 	$(CC) $(OBJS) -o $@ $(LDLIBS)
 
 %.o: %.c huffman16.h help.h input.h frequency.h suma.h kompresor.h dekompresor.h padding.h
-	$(CC) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJS) 
+	rm -f $(OBJS)
+
+debug:
+	gdb program
+

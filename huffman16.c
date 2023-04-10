@@ -89,11 +89,16 @@ node_16* buildHuffmanTree(uint16_t* data, uint16_t* frequency, uint16_t size) {
     heap->capacity = size;
     heap->array = (node_16**) malloc(heap->capacity * sizeof(node_16*));
 
-    for (uint16_t i = 0; i < size; ++i)
-        heap->array[i] = createNode(data[i], frequency[i]);
+    int charCount = 0;
+    for (uint16_t i = 0; i < size; ++i) {
+        if (frequency[i] > 0) {
+		heap->array[charCount] = createNode(data[i], frequency[i]);
+		charCount++;
+	}
+    }
 
-    heap->size = size;
-    for (uint16_t i = (size - 1) / 2; i >= 0; --i)
+    heap->size = charCount;
+    for (int i = (charCount - 1) / 2; i >= 0; --i)
         heapify(heap, i);
 
     while (!isSizeOne(heap)) {
@@ -113,7 +118,9 @@ node_16* buildHuffmanTree(uint16_t* data, uint16_t* frequency, uint16_t size) {
     return root;
 }
 
-void printHuffmanCodes(node_16* node, char* code, int top, FILE * out) {
+int* printHuffmanCodes(node_16* node, char* code, int top, FILE * out) {
+    int* codes = malloc(256 * sizeof(int));
+    
     if (node->left) {
     code[top] = '0';
     printHuffmanCodes(node->left, code, top + 1, out);
@@ -125,12 +132,15 @@ void printHuffmanCodes(node_16* node, char* code, int top, FILE * out) {
     if (isLeaf(node)) {
         fprintf(out, "%c: ", node->data);
         for (int i = 0; i < top; ++i)
-            fprintf(out, "%c", code[i]);
+           fprintf(out, "%c", code[i]);
+	codes[(int)node->data] = atoi(code);
+	printf("%d  kod %s \n", atoi(code), code);
         fprintf(out, "\n");
     }
+    return codes;
 }
 
-void huffmanCodes(uint16_t * data, uint16_t * frequency, uint16_t size, int compression_level, FILE * out) {
+int* huffmanCodes(uint16_t * data, uint16_t * frequency, uint16_t size, int compression_level, FILE * out) {
     node_16* root = buildHuffmanTree(data, frequency, size);
     int height;
 
@@ -141,5 +151,5 @@ void huffmanCodes(uint16_t * data, uint16_t * frequency, uint16_t size, int comp
     else height = (int)MAX_TREE_8;
 
     char code[height], c;
-    printHuffmanCodes(root, code, 0, out);
+    return printHuffmanCodes(root, code, 0, out);
 }

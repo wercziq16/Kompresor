@@ -36,7 +36,7 @@ node_16* extractMin(MinHeap* heap);
 void insertNode(MinHeap* heap, node_16* node);
 int isLeaf(node_16* node);
 node_16* buildHuffmanTree(uint16_t* data, uint16_t* frequency, uint16_t size);
-void printHuffmanCodes(node_16* node, char* code, int top, FILE * out);
-void huffmanCodes(uint16_t* data, uint16_t* frequency, uint16_t size, int compression_level, FILE * out);
+int* printHuffmanCodes(node_16* node, char* code, int top, FILE * out);
+int* huffmanCodes(uint16_t* data, uint16_t* frequency, uint16_t size, int compression_level, FILE * out);
 
 #endif
